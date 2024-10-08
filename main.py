@@ -1,21 +1,31 @@
 for _ in range(int(input())):
     n = int(input())
     child = list(map(int,input().split()))
-    c1, c2 = map(int,input().split())
-    def get_order(c):
-        order = [-1]*n
-        order[c] = 0
-        while child[c] != -1 and order[child[c]] == -1:
-            order[child[c]] = 1 + order[c]
-            c = child[c]
-        return order
-    o1, o2 = get_order(c1), get_order(c2)
-    cm, mini = -1, n+1
+    maxi = length = 0
+    value = [None]*n
     for i in range(n):
-        if o1[i] == -1 or o2[i] == -1:
+        if value[i]:
             continue
-        level = max(o1[i],o2[i])
-        if level < mini:
-            cm = i
-            mini = level
-    print(cm)
+        cur, marked = i, [False]*n
+        marked[cur] = True
+        value[cur] = (0,0)
+        while child[cur] != -1 and not value[child[cur]]:
+            s, l = value[cur]
+            value[child[cur]] = (s + cur, l + 1)
+            cur = child[cur]
+            marked[cur] = True
+        if child[cur] == -1 or not marked[child[cur]]:
+            continue
+        s1, l1 = value[cur]
+        s2, l2  = value[child[cur]]
+        s, l = s1 + cur - s2, l1 + 1 - l2
+        if s > maxi:
+            maxi = s
+            length = l
+    print(length)
+        
+
+
+
+        
+
